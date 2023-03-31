@@ -1,7 +1,22 @@
-import PropTypes from 'prop-types';
 import { FilterWrapper, FilterInput, Button } from './Filter.styled';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { changeFilter } from 'redux/filterSlice';
 
-export const Filter = ({ onChange, value, onClick }) => {
+export const Filter = () => {
+  const filter = useSelector(state => state.filter);
+
+  const dispatch = useDispatch();
+
+  const handleFilterChange = event => {
+    const { value } = event.currentTarget;
+    dispatch(changeFilter(value));
+  };
+
+  const clearFilter = () => {
+    dispatch(changeFilter(''));
+  };
+
   return (
     <>
       <FilterWrapper>
@@ -10,21 +25,15 @@ export const Filter = ({ onChange, value, onClick }) => {
             type="text"
             id="filter"
             name="filter"
-            value={value}
-            onChange={onChange}
+            value={filter}
+            onChange={handleFilterChange}
           />
         </label>
 
-        <Button type="button" onClick={onClick}>
+        <Button type="button" onClick={clearFilter}>
           Clear
         </Button>
       </FilterWrapper>
     </>
   );
-};
-
-Filter.propTypes = {
-  value: PropTypes.string,
-  onChange: PropTypes.func,
-  onClick: PropTypes.func,
 };
